@@ -162,6 +162,9 @@
         }
       }
     },
+    "If a formula or dependency has no bottle, Homebrew stops instead of building it from source." : {
+      "comment" : "Configuration setting: explanation"
+    },
     "Refresh" : {
       "comment" : "Configuration header: re-run brew config",
       "localizations" : {
@@ -184,6 +187,9 @@
           }
         }
       }
+    },
+    "Require prebuilt packages for formulae" : {
+      "comment" : "Configuration setting: title"
     },
     "System" : {
       "comment" : "Configuration card title: macOS, CPU, Xcode",

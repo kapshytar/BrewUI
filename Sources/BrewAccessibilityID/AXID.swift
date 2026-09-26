@@ -41,6 +41,7 @@ public enum AXID: Hashable, Sendable {
 
     // Config / Doctor
     case configScreen
+    case forceBottleFormulaeSwitch
     case doctorScreen
     case brewNotFoundState
 
@@ -102,6 +103,7 @@ public enum AXID: Hashable, Sendable {
         case .discoverList: "discover.list"
         case let .discoverRow(token): "discover.row.\(token)"
         case .configScreen: "config.screen"
+        case .forceBottleFormulaeSwitch: "config.force-bottle-formulae"
         case .doctorScreen: "doctor.screen"
         case .servicesScreen: "services.screen"
         case .servicesList: "services.list"
