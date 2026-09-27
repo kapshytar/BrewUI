@@ -23,8 +23,8 @@ struct LiveBrewMutatingCommandFactoryTests {
             factory.installCommand(kind: .cask, name: "docker").arguments,
             factory.bulkUpgradeCommand(selection: .casks).arguments
         ) == (
-            ["install", "--formula", "--force-bottle", "git"],
-            ["upgrade", "--formula", "--force-bottle", "git"],
+            ["install", "--formula", "--bottle-only", "git"],
+            ["upgrade", "--formula", "--bottle-only", "git"],
             ["install", "--cask", "docker"],
             ["upgrade", "--cask"]
         ))

@@ -3,6 +3,7 @@ import BrewCore
 import BrewCoreTestSupport
 @testable import BrewFeatureDiscover
 import BrewRepositoryInterfaces
+import Foundation
 import Testing
 
 struct DiscoverListRowViewModelTests {
@@ -19,7 +20,7 @@ struct DiscoverListRowViewModelTests {
         #expect(viewModel.descriptionText.isEmpty)
         #expect(!viewModel.hasDescription)
         #expect(viewModel.stableVersionLabel.isEmpty)
-        #expect(viewModel.installs30DayLabel == "12,345")
+        #expect(viewModel.installs30DayLabel == 12345.formatted())
         #expect(viewModel.installedStatusLabel == nil)
         #expect(viewModel.installedVersionLabel == nil)
     }

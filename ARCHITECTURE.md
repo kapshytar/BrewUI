@@ -64,6 +64,10 @@ format changes rather than assuming a fixed transcript.
 
 ## Homebrew configuration
 
+The local prebuilt-package setting uses `--bottle-only` and requires the patched
+Homebrew fork. With this setting enabled, bulk upgrades are formula-only;
+cask operations and their dependencies are not protected by this setting.
+
 BrewUI always launches Homebrew through `/bin/zsh`, including app self-upgrades. It disables
 optional user and system shell startup files with `--no-rcs --no-global-rcs` and supplies a clean environment.
 `PATH` contains only the directory of the located `brew` executable and its sibling `sbin`, followed by `/usr/bin:/bin`.
