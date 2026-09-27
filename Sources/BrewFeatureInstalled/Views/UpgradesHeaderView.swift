@@ -55,14 +55,14 @@ struct UpgradesHeaderView: View {
         Button {
             viewModel.upgradeAll()
         } label: {
-            Text("Upgrade All (\(viewModel.outdatedCount))", bundle: #bundle, comment: "Upgrades tab button; %lld is the outdated count")
+            Text("Upgrade All (\(viewModel.bulkUpgradeCount))", bundle: #bundle, comment: "Upgrades tab button; %lld is the outdated count")
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.regular)
         .keyboardShortcut("u", modifiers: [.command, .shift])
-        .disabled(viewModel.isUpgradingAny)
+        .disabled(viewModel.isUpgradingAny || viewModel.bulkUpgradeCount == 0)
         .accessibilityLabel(String(
-            localized: "Upgrade all \(viewModel.outdatedCount) packages",
+            localized: "Upgrade all \(viewModel.bulkUpgradeCount) packages",
             bundle: #bundle,
             comment: "VoiceOver: upgrade-all button; %lld is the outdated count",
         ))

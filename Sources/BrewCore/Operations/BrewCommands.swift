@@ -34,8 +34,17 @@ public enum BrewCommands {
 
     /// Batch `brew upgrade` for the given selection — everything outdated, a single kind, or an explicit list.
     public static func bulkUpgrade(_ selection: BrewUpgradeSelection, forceBottle: Bool = false) -> BrewCommand {
-        let arguments = selection.arguments
+        if case .bottleOnlyFormulae = selection {
+            return BrewCommand(operationKind: .upgradeAll, arguments: selection.arguments)
+        }
+        if case .explicitCasks = selection {
+            return BrewCommand(operationKind: .upgradeAll, arguments: selection.arguments)
+        }
+        var arguments = selection.arguments
         let includesFormulae = selection != .casks
+        if forceBottle, includesFormulae, !arguments.contains("--formula") {
+            arguments.insert("--formula", at: 1)
+        }
         let bottleArguments = includesFormulae ? bottleArguments(kind: .formula, forceBottle: forceBottle) : []
         return BrewCommand(operationKind: .upgradeAll, arguments: arguments + bottleArguments)
     }
@@ -63,6 +72,6 @@ public enum BrewCommands {
     }
 
     private static func bottleArguments(kind: HomebrewPackageKind, forceBottle: Bool) -> [String] {
-        kind == .formula && forceBottle ? ["--force-bottle"] : []
+        kind == .formula && forceBottle ? ["--bottle-only"] : []
     }
 }

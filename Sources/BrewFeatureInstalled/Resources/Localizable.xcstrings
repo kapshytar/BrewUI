@@ -265,6 +265,9 @@
     "Upgrades every outdated package" : {
       "comment" : "Upgrades header command summary for an unfiltered batch"
     },
+    "Upgrades formulae using prebuilt packages only; casks are excluded" : {
+      "comment" : "Protected formula-only upgrade summary"
+    },
     "Upgrades the %lld packages matching your search" : {
       "comment" : "Upgrades header command summary for multiple searched packages"
     },

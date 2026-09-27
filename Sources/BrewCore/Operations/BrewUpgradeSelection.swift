@@ -22,6 +22,8 @@ public enum BrewUpgradeSelection: Hashable, Sendable {
     case formulae
     case casks
     case explicit([String])
+    case bottleOnlyFormulae([String])
+    case explicitCasks([String])
 
     /// Argument vector passed to the `brew` executable.
     public var arguments: [String] {
@@ -34,6 +36,10 @@ public enum BrewUpgradeSelection: Hashable, Sendable {
             ["upgrade", "--cask"]
         case let .explicit(names):
             ["upgrade"] + names
+        case let .bottleOnlyFormulae(names):
+            ["upgrade", "--formula", "--bottle-only"] + names
+        case let .explicitCasks(names):
+            ["upgrade", "--cask"] + names
         }
     }
 
@@ -54,6 +60,10 @@ public enum BrewUpgradeSelection: Hashable, Sendable {
             isOutdated && packageID.kind == .cask
         case let .explicit(names):
             names.contains(packageID.name)
+        case let .bottleOnlyFormulae(names):
+            packageID.kind == .formula && isOutdated && (names.isEmpty || names.contains(packageID.name))
+        case let .explicitCasks(names):
+            packageID.kind == .cask && names.contains(packageID.name)
         }
     }
 }

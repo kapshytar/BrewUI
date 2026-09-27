@@ -11,6 +11,25 @@ import Foundation
 import Testing
 
 struct UpgradesViewModelScopeTests {
+    @Test @MainActor func `protected mixed upgrades select only formulae and display the real command`() {
+        let vm = UpgradesViewModel(
+            repository: StubInstalledPackagesRepository(packages: Self.mixedOutdated),
+            brewCommandCenter: StubBrewCommandCenter(),
+            commandFactory: ProtectedScopeCommandFactory(),
+        )
+        #expect(vm.upgradeSelection == .bottleOnlyFormulae(["git"]))
+        #expect(vm.bulkUpgradeDisplayCommand == "brew upgrade --formula --bottle-only git")
+        #expect(String(localized: vm.bulkUpgradeSummary).contains("casks are excluded"))
+        vm.searchQuery = "slack"
+        #expect(vm.upgradeSelection == .bottleOnlyFormulae([]))
+        #expect(vm.bulkUpgradeCount == 0)
+        vm.scope = .casks
+        #expect(vm.upgradeSelection == .explicitCasks(["slack"]))
+        #expect(ProtectedScopeCommandFactory().bulkUpgradeCommand(selection: vm.upgradeSelection).arguments == [
+            "upgrade", "--cask", "slack",
+        ])
+    }
+
     // MARK: - Filtering
 
     @Test @MainActor func `scope defaults to all and shows both outdated kinds`() {
@@ -352,6 +371,28 @@ struct UpgradesViewModelScopeTests {
             if condition() { return }
             await Task.yield()
         }
+    }
+}
+
+private struct ProtectedScopeCommandFactory: BrewMutatingCommandFactory {
+    func installCommand(kind: HomebrewPackageKind, name: String) -> BrewCommand {
+        BrewCommands.install(name, kind: kind, forceBottle: true)
+    }
+
+    func upgradeCommand(kind: HomebrewPackageKind, name: String) -> BrewCommand {
+        BrewCommands.upgrade(name, kind: kind, forceBottle: true)
+    }
+
+    func uninstallCommand(kind: HomebrewPackageKind, name: String) -> BrewCommand {
+        BrewCommands.uninstall(name, kind: kind)
+    }
+
+    func bulkUpgradeCommand(selection: BrewUpgradeSelection) -> BrewCommand {
+        BrewCommands.bulkUpgrade(selection, forceBottle: true)
+    }
+
+    func doctorFixCommand(arguments: [String]) -> BrewCommand {
+        BrewCommands.doctorFix(arguments: arguments)
     }
 }
 

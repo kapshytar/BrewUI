@@ -340,6 +340,13 @@ extension UpgradesViewModel {
         upgradeSelection.displayCommand
     }
 
+    var bulkUpgradeCount: Int {
+        if case let .bottleOnlyFormulae(names) = upgradeSelection {
+            return names.count
+        }
+        return outdatedCount
+    }
+
     var bulkUpgradeSummary: LocalizedStringResource {
         switch upgradeSelection {
         case .all:
@@ -360,8 +367,14 @@ extension UpgradesViewModel {
                 bundle: #bundle,
                 comment: "Upgrades header command summary scoped to casks",
             )
-        case let .explicit(names):
+        case let .explicit(names), let .explicitCasks(names):
             Self.searchedUpgradeSummary(count: names.count)
+        case .bottleOnlyFormulae:
+            LocalizedStringResource(
+                "Upgrades formulae using prebuilt packages only; casks are excluded",
+                bundle: #bundle,
+                comment: "Protected formula-only upgrade summary",
+            )
         }
     }
 
@@ -421,6 +434,12 @@ extension UpgradesViewModel {
     /// - A search narrows the batch to the visible rows by name (`brew upgrade git slack`).
     /// - Otherwise the scope picker maps to everything / `--formula` / `--cask`.
     var upgradeSelection: BrewUpgradeSelection {
+        if commandFactory.bulkUpgradeCommand(selection: .formulae).arguments.contains("--bottle-only") {
+            if scope == .casks {
+                return .explicitCasks(allRows.map(\.name))
+            }
+            return .bottleOnlyFormulae(allRows.filter { $0.kind == .formula }.map(\.name))
+        }
         if isSearchActive, !allRows.isEmpty {
             return .explicit(allRows.map(\.name))
         }
@@ -451,6 +470,9 @@ extension UpgradesViewModel {
             return
         }
         let selection = upgradeSelection
+        if case let .bottleOnlyFormulae(names) = selection, names.isEmpty {
+            return
+        }
         let id = BrewOperationID.bulkUpgrade(selection)
         let command = commandFactory.bulkUpgradeCommand(selection: selection)
         Task { try? await brewCommandCenter.perform(command, id: id) }

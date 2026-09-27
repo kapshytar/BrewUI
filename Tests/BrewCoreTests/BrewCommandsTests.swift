@@ -16,7 +16,7 @@ struct BrewCommandsTests {
 
     @Test func `install requires a bottle for formulae when requested`() {
         #expect(BrewCommands.install("git", kind: .formula, forceBottle: true).arguments == [
-            "install", "--formula", "--force-bottle", "git",
+            "install", "--formula", "--bottle-only", "git",
         ])
     }
 
@@ -34,7 +34,7 @@ struct BrewCommandsTests {
 
     @Test func `upgrade requires bottles for formulae but not casks`() {
         #expect(BrewCommands.upgrade("git", kind: .formula, forceBottle: true).arguments == [
-            "upgrade", "--formula", "--force-bottle", "git",
+            "upgrade", "--formula", "--bottle-only", "git",
         ])
         #expect(BrewCommands.upgrade("docker", kind: .cask, forceBottle: true).arguments == [
             "upgrade", "--cask", "docker",
@@ -56,10 +56,16 @@ struct BrewCommandsTests {
 
     @Test func `bulkUpgrade requires bottles for formulae but not casks`() {
         #expect(BrewCommands.bulkUpgrade(.formulae, forceBottle: true).arguments == [
-            "upgrade", "--formula", "--force-bottle",
+            "upgrade", "--formula", "--bottle-only",
         ])
         #expect(BrewCommands.bulkUpgrade(.casks, forceBottle: true).arguments == ["upgrade", "--cask"])
-        #expect(BrewCommands.bulkUpgrade(.all, forceBottle: true).arguments == ["upgrade", "--force-bottle"])
+        #expect(BrewCommands.bulkUpgrade(.all, forceBottle: true).arguments == ["upgrade", "--formula", "--bottle-only"])
+        let protected = BrewUpgradeSelection.bottleOnlyFormulae(["git"])
+        #expect(BrewCommands.bulkUpgrade(protected, forceBottle: true).arguments == [
+            "upgrade", "--formula", "--bottle-only", "git",
+        ])
+        #expect(protected.displayCommand == "brew upgrade --formula --bottle-only git")
+        #expect(!protected.covers(packageID: .cask(token: "git"), isOutdated: true))
     }
 
     @Test func `selfUpgrade upgrades the app's own cask under upgradeApp`() {
