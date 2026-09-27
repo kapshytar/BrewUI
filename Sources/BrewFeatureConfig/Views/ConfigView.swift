@@ -90,9 +90,13 @@ struct ConfigView: View {
                 VStack(alignment: .leading, spacing: BrewSpacing.xs) {
                     Text("Require prebuilt packages for formulae", bundle: #bundle, comment: "Configuration setting: title")
                         .font(.brewCallout.weight(.semibold))
-                    Text("Requires patched Homebrew with --bottle-only. Formula builds are refused; bulk upgrades process formulae only. Cask operations are not protected.", bundle: #bundle, comment: "Configuration setting: explanation")
-                        .font(.brewCaption)
-                        .foregroundStyle(Color.brewTextSecondary)
+                    Text(
+                        "Requires patched Homebrew with --bottle-only. Formula builds are refused; bulk upgrades process formulae only. Cask operations are not protected.",
+                        bundle: #bundle,
+                        comment: "Configuration setting: explanation",
+                    )
+                    .font(.brewCaption)
+                    .foregroundStyle(Color.brewTextSecondary)
                 }
             }
             .toggleStyle(.switch)
