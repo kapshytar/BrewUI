@@ -4,7 +4,7 @@ import Foundation
 import Testing
 
 struct LiveBrewMutatingCommandFactoryTests {
-    @Test func `formula bottle preference affects formula commands only`() throws {
+    @Test func `formula bottle preference affects formula commands only`() {
         let defaults = UserDefaults.standard
         let originalValue = defaults.object(forKey: BrewCommands.forceBottlePreferenceKey)
         defer {
@@ -21,12 +21,12 @@ struct LiveBrewMutatingCommandFactoryTests {
             factory.installCommand(kind: .formula, name: "git").arguments,
             factory.upgradeCommand(kind: .formula, name: "git").arguments,
             factory.installCommand(kind: .cask, name: "docker").arguments,
-            factory.bulkUpgradeCommand(selection: .casks).arguments
+            factory.bulkUpgradeCommand(selection: .casks).arguments,
         ) == (
             ["install", "--formula", "--bottle-only", "git"],
             ["upgrade", "--formula", "--bottle-only", "git"],
             ["install", "--cask", "docker"],
-            ["upgrade", "--cask"]
+            ["upgrade", "--cask"],
         ))
     }
 }
