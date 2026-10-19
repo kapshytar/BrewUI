@@ -28,5 +28,12 @@ struct LiveBrewMutatingCommandFactoryTests {
             ["install", "--cask", "docker"],
             ["upgrade", "--cask"],
         ))
+        for verb in ["install", "upgrade", "reinstall"] {
+            #expect(factory.doctorFixCommand(arguments: [verb, "git"]).arguments
+                == [verb, "--formula", "git", "--bottle-only"])
+        }
+        #expect(factory.doctorFixCommand(arguments: ["upgrade", "--cask", "docker"]).arguments
+            == ["upgrade", "--cask", "docker"])
+        #expect(factory.doctorFixCommand(arguments: ["cleanup"]).arguments == ["cleanup"])
     }
 }

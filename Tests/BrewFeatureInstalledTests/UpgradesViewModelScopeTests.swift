@@ -394,6 +394,10 @@ private struct ProtectedScopeCommandFactory: BrewMutatingCommandFactory {
     func doctorFixCommand(arguments: [String]) -> BrewCommand {
         BrewCommands.doctorFix(arguments: arguments)
     }
+
+    func bundleDumpCommand(fileURL: URL) -> BrewCommand {
+        BrewCommands.bundleDump(fileURL: fileURL)
+    }
 }
 
 /// Live phase stream the scope tests drive by hand — mirrors the one in `UpgradesViewModelTests` but is

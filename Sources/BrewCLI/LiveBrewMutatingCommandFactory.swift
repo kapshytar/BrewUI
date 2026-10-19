@@ -27,7 +27,19 @@ public struct LiveBrewMutatingCommandFactory: BrewMutatingCommandFactory {
     }
 
     public func doctorFixCommand(arguments: [String]) -> BrewCommand {
-        BrewCommands.doctorFix(arguments: arguments)
+        var arguments = arguments
+        if forceBottleEnabled,
+           let verb = arguments.first,
+           ["install", "upgrade", "reinstall"].contains(verb),
+           !arguments.contains("--cask"), !arguments.contains("--casks") {
+            if !arguments.contains("--formula") {
+                arguments.insert("--formula", at: 1)
+            }
+            if !arguments.contains("--bottle-only") {
+                arguments.append("--bottle-only")
+            }
+        }
+        return BrewCommands.doctorFix(arguments: arguments)
     }
 
     public func bundleDumpCommand(fileURL: URL) -> BrewCommand {

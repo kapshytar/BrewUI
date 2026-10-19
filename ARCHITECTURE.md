@@ -67,6 +67,8 @@ format changes rather than assuming a fixed transcript.
 The local prebuilt-package setting uses `--bottle-only` and requires the patched
 Homebrew fork. With this setting enabled, bulk upgrades are formula-only;
 cask operations and their dependencies are not protected by this setting.
+Doctor fixes that install, upgrade or reinstall formulae use the same protection.
+Official app self-updates replace this local build and do not preserve the patch.
 
 BrewUI always launches Homebrew through `/bin/zsh`, including app self-upgrades. It disables
 optional user and system shell startup files with `--no-rcs --no-global-rcs` and supplies a clean environment.
